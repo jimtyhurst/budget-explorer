@@ -36,8 +36,8 @@ shinyServer(function(input, output) {
   budgetXLabel <- reactive({variableNameMap[input$variable]})
   budgetYLabel <- reactive({paste("Amount")})
 
-  output$properties <- renderPlot({
-    ggplot(data=st, aes(x=service_area_code, y=amount)) +
+  output$budgetPlot <- renderPlot({
+    ggplot(data=getServiceAreaTotals(), aes(x=service_area_code, y=amount)) +
       xlab("Service Area") +
       ylab("Amount") +
       geom_bar(stat="identity")

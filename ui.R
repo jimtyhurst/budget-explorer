@@ -18,9 +18,9 @@ shinyUI(pageWithSidebar(
                      "Accounting Object" = "object_code"))
   ),
 
-  # Show the caption and plot of the requested variable against mpg.
+  # Show the caption and plot of the requested variable.
   mainPanel(
     h3(textOutput("caption")),
-    plotOutput("summaryPlot")
+    plotOutput("budgetPlot")
   )
 ))
