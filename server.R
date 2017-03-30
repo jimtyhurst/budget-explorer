@@ -1,5 +1,6 @@
 library(shiny)
 library(datasets)
+library(ggplot2)
 source("./data.R")
 
 # Based on code from:
@@ -32,13 +33,14 @@ shinyServer(function(input, output) {
   # Translate variable selection to displayable name.
   variableNameMap <- list("service_area_code" = "Service Area", "bureau_code" = "Bureau", "accounting_object_name" = "Accounting Object")
   budgetTitle <- "Budget for the City of Portland"
-  budgetXLabel <- reactive({
-    paste("Amount")
-  })
-  budgetYLabel <- "Service Area"
+  budgetXLabel <- reactive({variableNameMap[input$variable]})
+  budgetYLabel <- reactive({paste("Amount")})
 
   output$properties <- renderPlot({
-    hist(budgetData[, input$variable], main = budgetTitle, xlab = budgetXLabel(), ylab = budgetYLabel)
+    ggplot(data=st, aes(x=service_area_code, y=amount)) +
+      xlab("Service Area") +
+      ylab("Amount") +
+      geom_bar(stat="identity")
   })
 
 })
