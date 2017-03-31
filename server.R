@@ -6,41 +6,40 @@ source("./data.R")
 # Based on code from:
 #   https://shiny.rstudio.com/articles/build.html
 
-budgetData <- getBudgetHistory()
-#budgetData$object_code <- factor(budgetData$object_code, labels = c("BOND", "CAPITAL", "CONT", "EMS", "ENDBAL", "FNDXFER"))
-
 # Server logic required to plot various variables against
 # total budget.
 shinyServer(function(input, output) {
 
   ####################
-  # Generate a plot of the requested variable against budget.
+  # Generates a plot of the requested budgetLevel.
 
-  # Compute the formula text in a reactive expression since it is
-  # shared by the output$caption and output$budgetPlot expressions.
-  formulaText <- reactive({
-    paste("budget ~", input$variable)
+  # Computes the caption in a reactive expression, because
+  # it depends on the choices of budgetLevel and year.
+  captionText <- reactive({
+    paste("By ", budgetLevelNameMap[input$budgetLevel], " for ", input$year)
   })
 
-  # Return the formula text for printing as a caption.
+  # Returns text for printing as the caption.
   output$caption <- renderText({
-    formulaText()
+    captionText()
   })
 
   ####################
-  # Generate a histogram of observations for the selected property.
+  # Generates a chart.
+  # TODO: Plot should be responsive to choice of budgetLevel.
 
-  # Translate variable selection to displayable name.
-  variableNameMap <- list("service_area_code" = "Service Area", "bureau_code" = "Bureau", "accounting_object_name" = "Accounting Object")
+  # Translates budgetLevel selection to displayable name.
+  budgetLevelNameMap <- list("service_area_code" = "Service Area", "bureau_code" = "Bureau", "object_code" = "Accounting Object")
   budgetTitle <- "Budget for the City of Portland"
-  budgetXLabel <- reactive({variableNameMap[input$variable]})
+  budgetXLabel <- reactive({budgetLevelNameMap[input$budgetLevel]})
   budgetYLabel <- reactive({paste("Amount")})
 
   output$budgetPlot <- renderPlot({
-    ggplot(data=getServiceAreaTotals(), aes(x=service_area_code, y=amount)) +
+    ggplot(data=getServiceAreaTotals(input$year), aes(x=service_area_code, y=amount)) +
       xlab("Service Area") +
       ylab("Amount") +
-      geom_bar(stat="identity")
+      geom_bar(stat="identity") +
+      ggtitle(budgetTitle)
   })
 
 })

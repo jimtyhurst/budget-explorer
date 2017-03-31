@@ -17,12 +17,25 @@
 # "service_area_code"
 # "sub_program_code"
 
-getBudgetHistory <- function() {
-  return(read.csv("./data/HackOregon_hx_budget_data_ASV2_transformed.csv", stringsAsFactors = FALSE))
+getBudgetHistory <- function(fiscalYear = "2015-16") {
+  h <- read.csv("./data/HackOregon_hx_budget_data_ASV2_transformed.csv", stringsAsFactors = FALSE)
+  if (fiscalYear != "All Years") {
+    h <- h[h$fiscal_year == fiscalYear, ]
+  }
+  return(h)
 }
 
-getServiceAreaTotals <- function() {
-  serviceAreaHistory <- getBudgetHistory()[,c('fiscal_year', 'service_area_code', 'amount')]
-  serviceAreaTotals <- aggregate(amount ~ fiscal_year + service_area_code, data = serviceAreaHistory, sum)
-  return(serviceAreaTotals)
+getServiceAreaTotals <- function(fiscalYear = "2015-16") {
+  serviceAreaHistory <-
+    getBudgetHistory(fiscalYear)[, c('fiscal_year', 'service_area_code', 'amount')]
+  serviceAreaTotals <-
+    aggregate(amount ~ fiscal_year + service_area_code, data = serviceAreaHistory, sum)
+  separator <- rep(" ", length(serviceAreaTotals$service_area_code))
+  serviceAreaTotals$service_area_year <- paste0(serviceAreaTotals$service_area_code,
+                                                separator,
+                                                serviceAreaTotals$fiscal_year)
+  attach(serviceAreaTotals)
+  sortedByAmount <- serviceAreaTotals[order(fiscal_year, -amount, service_area_code), ]
+  detach(serviceAreaTotals)
+  return(sortedByAmount)
 }
