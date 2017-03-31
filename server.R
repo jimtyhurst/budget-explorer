@@ -22,7 +22,7 @@ shinyServer(function(input, output) {
     paste("By", budgetLevelNameMap[input$budgetLevel], "for", input$fiscalYear)
   })
 
-  budgetLevel <- reactive({
+  budgetLevelName <- reactive({
     budgetLevelNameMap[input$budgetLevel]
   })
 
@@ -31,10 +31,11 @@ shinyServer(function(input, output) {
   # TODO: Plot should be responsive to choice of budgetLevel.
 
   output$budgetPlot <- renderPlot({
-    ggplot(data=getServiceAreaTotals(input$fiscalYear), aes(x=service_area_code, y=amount)) +
-      xlab(budgetLevel()) +
+    ggplot(data = getServiceAreaTotals(input$fiscalYear),
+           aes(x = service_area_code, y = amount)) +
+      geom_bar(stat = "identity") +
+      xlab(budgetLevelName()) +
       ylab("Amount") +
-      geom_bar(stat="identity") +
       ggtitle(paste("Budget for the City of Portland:", captionText()))
   })
 
