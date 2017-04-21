@@ -25,8 +25,7 @@ shinyUI(fluidPage(
                        "2009-10" = "2009-10",
                        "2008-09" = "2008-09",
                        "2007-08" = "2007-08",
-                       "2006-07" = "2006-07",
-                       "All Years" = "All Years"))
+                       "2006-07" = "2006-07"))
     ),
 
     # Shows the caption and plot of the requested variable.
