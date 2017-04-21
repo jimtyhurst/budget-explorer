@@ -34,8 +34,11 @@ getServiceAreaTotals <- function(fiscalYear = "2015-16") {
   serviceAreaTotals$service_area_year <- paste0(serviceAreaTotals$service_area_code,
                                                 separator,
                                                 serviceAreaTotals$fiscal_year)
-  attach(serviceAreaTotals)
-  sortedByAmount <- serviceAreaTotals[order(fiscal_year, -amount, service_area_code), ]
-  detach(serviceAreaTotals)
+  sortedByAmount <- serviceAreaTotals[order(serviceAreaTotals$fiscal_year, serviceAreaTotals$amount, decreasing = TRUE), ]
   return(sortedByAmount)
+}
+
+getAmountLimits <- function(budgetData) {
+#  return(c(0, max(budgetData$amount)))
+  return(c(0, 2000000000))
 }

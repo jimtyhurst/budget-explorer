@@ -31,9 +31,12 @@ shinyServer(function(input, output) {
   # TODO: Plot should be responsive to choice of budgetLevel.
 
   output$budgetPlot <- renderPlot({
-    ggplot(data = getServiceAreaTotals(input$fiscalYear),
-           aes(x = service_area_code, y = amount)) +
+    budgetData <- getServiceAreaTotals(input$fiscalYear)
+    ggplot(data = budgetData,
+           aes(x = reorder(service_area_code, amount), y = amount)) +
       geom_bar(stat = "identity") +
+      scale_y_continuous(limits = getAmountLimits(budgetData)) +
+      coord_flip() +
       xlab(budgetLevelName()) +
       ylab("Amount") +
       ggtitle(paste("Budget for the City of Portland:", captionText()))
