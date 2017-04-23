@@ -12,6 +12,7 @@ LazyData: TRUE
 Depends:
     R (>= 3.3.3)
 Imports:
+    ggplot2 (>= 2.2.1)
     httr (>= 1.2.1),
     jsonlite (>= 1.4),
     shiny (>= 1.0.2)
