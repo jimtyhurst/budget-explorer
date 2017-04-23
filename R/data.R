@@ -1,22 +1,21 @@
-# Column names (in alphabetical order):
-# "accounting_object_name" (name for 'object_code')
-# "amount"
-# "bureau_code"
-# "bureau_name"
-# "division_code"
-# "fiscal_year"
-# "functional_area_code"
-# "functional_area_name"
-# "fund_center"
-# "fund_center_code"
-# "fund_center_name"
-# "fund_code"
-# "fund_name"
-# "object_code"
-# "program_code"
-# "service_area_code"
-# "sub_program_code"
-
+#' Column names (in alphabetical order):
+#'   accounting_object_name (name for 'object_code')
+#'   amount
+#'   bureau_code
+#'   bureau_name
+#'   division_code
+#'   fiscal_year
+#'   functional_area_code
+#'   functional_area_name
+#'   fund_center
+#'   fund_center_code
+#'   fund_center_name
+#'   fund_code
+#'   fund_name
+#'   object_code
+#'   program_code
+#'   service_area_code
+#'   sub_program_code
 getBudgetHistory <- function(fiscalYear = "2015-16") {
   h <- read.csv("./data/HackOregon_hx_budget_data_ASV2_transformed.csv", stringsAsFactors = FALSE)
   if (fiscalYear != "All Years") {
@@ -24,6 +23,7 @@ getBudgetHistory <- function(fiscalYear = "2015-16") {
   }
   return(h)
 }
+
 
 getServiceAreaTotals <- function(fiscalYear = "2015-16") {
   serviceAreaHistory <-
@@ -37,6 +37,7 @@ getServiceAreaTotals <- function(fiscalYear = "2015-16") {
   sortedByAmount <- serviceAreaTotals[order(serviceAreaTotals$fiscal_year, serviceAreaTotals$amount, decreasing = TRUE), ]
   return(sortedByAmount)
 }
+
 
 getAmountLimits <- function(budgetData) {
 #  return(c(0, max(budgetData$amount)))
