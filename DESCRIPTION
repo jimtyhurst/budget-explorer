@@ -1,0 +1,25 @@
+Package: BudgetExplorerPDX
+Type: Package
+Title: Web app for exploring the Portland City Budget
+Version: 0.1.0
+Date: 2017-04-23
+Author: person("Jim", "Tyhurst", email = "jim@tyhurst.com", role = c("aut", "cre"))
+Description: This web application uses Hack Oregon's web service to  access historical data from the City of Portland Oregon's budget (http://service.civicpdx.org/budget/).
+License: file LICENSE
+Copyright: 2017 Jim Tyhurst
+Encoding: UTF-8
+LazyData: TRUE
+Depends:
+    R (>= 3.3.3)
+Imports:
+    httr (>= 1.2.1),
+    jsonlite (>= 1.4),
+    shiny (>= 1.0.2)
+Suggests:
+    devtools,
+    knitr,
+    rmarkdown,
+    roxygen2,
+    testthat
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
