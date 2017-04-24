@@ -1,4 +1,19 @@
-#' Column names (in alphabetical order):
+library(httr)
+library(jsonlite)
+library(magrittr)
+library(dplyr)
+source("budgetLevels.R")
+
+BASE_URL <- "http://service.civicpdx.org/budget"
+HISTORY_PATH <- paste0(BASE_URL, "/history")
+SERVICE_AREA_PATH <- paste0(BASE_URL, "/history/service_area")
+BUREAU_PATH <- paste0(BASE_URL, "/history/bureau")
+ENCODING <- "UTF-8"
+
+MAX_DOLLARS_PER_YEAR <- data.frame(c(2000000000), c(1500000000))
+colnames(MAX_DOLLARS_PER_YEAR) <- c(SERVICE_AREA_SELECTOR, BUREAU_SELECTOR)
+
+#' Returns data.frame with column names:
 #'   accounting_object_name (name for 'object_code')
 #'   amount
 #'   bureau_code
@@ -17,29 +32,43 @@
 #'   service_area_code
 #'   sub_program_code
 getBudgetHistory <- function(fiscalYear = "2015-16") {
-  h <- read.csv("./data/HackOregon_hx_budget_data_ASV2_transformed.csv", stringsAsFactors = FALSE)
-  if (fiscalYear != "All Years") {
-    h <- h[h$fiscal_year == fiscalYear, ]
-  }
-  return(h)
+  return(
+    httr::GET(HISTORY_PATH, query = list(fiscal_year = fiscalYear)) %>%
+      httr::content(type = "text", encoding = ENCODING) %>%
+      jsonlite::fromJSON() %>%
+      with(results)
+  )
 }
 
-
+#' Returns data.frame with column names:
+#'   amount
+#'   fiscal_year
+#'   service_area_code
 getServiceAreaTotals <- function(fiscalYear = "2015-16") {
-  serviceAreaHistory <-
-    getBudgetHistory(fiscalYear)[, c('fiscal_year', 'service_area_code', 'amount')]
-  serviceAreaTotals <-
-    aggregate(amount ~ fiscal_year + service_area_code, data = serviceAreaHistory, sum)
-  separator <- rep(" ", length(serviceAreaTotals$service_area_code))
-  serviceAreaTotals$service_area_year <- paste0(serviceAreaTotals$service_area_code,
-                                                separator,
-                                                serviceAreaTotals$fiscal_year)
-  sortedByAmount <- serviceAreaTotals[order(serviceAreaTotals$fiscal_year, serviceAreaTotals$amount, decreasing = TRUE), ]
-  return(sortedByAmount)
+  return(
+    httr::GET(SERVICE_AREA_PATH, query = list(fiscal_year = fiscalYear)) %>%
+      httr::content(type = "text", encoding = ENCODING) %>%
+      jsonlite::fromJSON() %>%
+      with(results)
+  )
 }
 
+#' Returns data.frame with column names:
+#'   amount
+#'   bureau_code
+#'   bureau_name
+#'   fiscal_year
+#'   service_area_code
+getBureauTotals <- function(fiscalYear = "2015-16") {
+  return(
+    httr::GET(BUREAU_PATH, query = list(fiscal_year = fiscalYear)) %>%
+      httr::content(type = "text", encoding = ENCODING) %>%
+      jsonlite::fromJSON() %>%
+      with(results)
+  )
+}
 
-getAmountLimits <- function(budgetData) {
-#  return(c(0, max(budgetData$amount)))
-  return(c(0, 2000000000))
+getAmountLimits <- function(budgetLevel = SERVICE_AREA_SELECTOR) {
+  # TODO: Calculate this dynamically from the history table.
+  return(c(0, MAX_DOLLARS_PER_YEAR[[budgetLevel]]))
 }
