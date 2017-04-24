@@ -5,16 +5,14 @@ library(shiny)
 
 # Displays budget data for a city.
 shinyUI(fluidPage(
-  titlePanel("Budget Explorer"),
+  titlePanel("PDX Budget Explorer"),
   sidebarLayout(
-    # Controls to select the level of the budget charted.
+    # Controls to select the level of the budget to be plotted.
     sidebarPanel(
       p(h4(em("Prototype only!"))),
-      p(h4(em("This is a work in progress"))),
       selectInput("budgetLevel", "Level:",
                   list("Service Area" = "service_area_code",
-                       "Bureau (not implemented)" = "bureau_code",
-                       "Accounting Object (not implemented)" = "object_code")),
+                       "Bureau" = "bureau_code")),
       selectInput("fiscalYear", "Fiscal Year:",
                   list("2015-16" = "2015-16",
                        "2014-15" = "2014-15",
