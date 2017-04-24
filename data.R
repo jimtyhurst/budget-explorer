@@ -2,12 +2,16 @@ library(httr)
 library(jsonlite)
 library(magrittr)
 library(dplyr)
+source("budgetLevels.R")
 
 BASE_URL <- "http://service.civicpdx.org/budget"
 HISTORY_PATH <- paste0(BASE_URL, "/history")
 SERVICE_AREA_PATH <- paste0(BASE_URL, "/history/service_area")
 BUREAU_PATH <- paste0(BASE_URL, "/history/bureau")
 ENCODING <- "UTF-8"
+
+MAX_DOLLARS_PER_YEAR <- data.frame(c(2000000000), c(1500000000))
+colnames(MAX_DOLLARS_PER_YEAR) <- c(SERVICE_AREA_SELECTOR, BUREAU_SELECTOR)
 
 #' Returns data.frame with column names:
 #'   accounting_object_name (name for 'object_code')
@@ -64,7 +68,7 @@ getBureauTotals <- function(fiscalYear = "2015-16") {
   )
 }
 
-getAmountLimits <- function(budgetData) {
-#  return(c(0, max(budgetData$amount)))
-  return(c(0, 2000000000))
+getAmountLimits <- function(budgetLevel = SERVICE_AREA_SELECTOR) {
+  # TODO: Calculate this dynamically from the history table.
+  return(c(0, MAX_DOLLARS_PER_YEAR[[budgetLevel]]))
 }
