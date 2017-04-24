@@ -6,8 +6,8 @@ This application is written completely in the [R language](https://www.r-project
 ## To run the application locally
 In [RStudio](https://www.rstudio.com/):
 1. Open the application.
-2. Install the packages listed as `Imports` in the DESCRIPTION file.
-3. Load the [shiny](https://shiny.rstudio.com/) package from the console: `library(shiny)`
+2. Install the packages listed as `Imports` in the `DESCRIPTION` file.
+3. Load the [shiny](https://cran.r-project.org/package=shiny) package from the console: `library(shiny)`
 4. Start the application from the console: `shiny::runApp()`
 5. RStudio will pop open a web browser, running the application.
 
